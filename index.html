@@ -55,15 +55,13 @@
 			background-color: var(--bg-main);
 			color: var(--text-white);
 			font-family: var(--font-body);
-			overflow-x: hidden;
 		}
 
 		body {
 			background-color: var(--bg-main);
 			min-height: 100vh;
-			overflow-x: hidden;
 			position: relative;
-			padding-bottom: 60px; /* Espaço para a barra inferior não cobrir o rodapé */
+			padding-bottom: 60px; /* Espaço para a barra inferior */
 		}
 
 		/* ==========================================================================
@@ -91,7 +89,7 @@
 			transform: translateY(-50%);
 			overflow: hidden;
 			pointer-events: none;
-			z-index: 1; /* Fica no fundo absoluto, atrás de todo o conteúdo */
+			z-index: 1;
 			white-space: nowrap;
 		}
 
@@ -126,7 +124,7 @@
 		}
 
 		/* ==========================================================================
-		   CAMADA DE VÍDEO INTRO (LIMPO, SEM POLUIÇÃO)
+		   CAMADA DE VÍDEO INTRO
 		   ========================================================================== */
 		#intro-overlay {
 			position: fixed;
@@ -134,6 +132,7 @@
 			left: 0;
 			width: 100vw;
 			height: 100vh;
+			height: 100dvh;
 			background: #000000;
 			z-index: 99999;
 			display: flex;
@@ -166,29 +165,28 @@
 		}
 
 		/* ==========================================================================
-		   HERO STICKY SCROLL TRACK: FOTO E TEXTO APAGAM TOTALMENTE ANTES DO SITE
+		   ESTÁGIO 1: HERO FIXO NA TELA (FOTO E TEXTO APAGAM TOTALMENTE ANTES DO SITE)
 		   ========================================================================== */
-		.hero-scroll-track {
-			position: relative;
-			height: 180vh; /* Pista dedicada para a transição suave */
-			z-index: 10;
-		}
-
-		.hero-sticky-container {
-			position: sticky;
+		#hero-fixed-layer {
+			position: fixed;
 			top: 0;
+			left: 0;
+			width: 100vw;
 			height: 100vh;
+			height: 100dvh;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			padding: 40px 20px;
-			overflow: hidden;
+			z-index: 10;
+			pointer-events: none;
+			will-change: opacity, transform;
+			transition: visibility 0.2s ease;
 		}
 
 		.hero-photo-wrapper {
 			position: relative;
-			z-index: 5;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -204,6 +202,11 @@
 			transform: scale(1);
 		}
 
+		/* Desativa a transição CSS quando a interação/rolagem começa para resposta imediata ao scroll */
+		.hero-photo-wrapper.interactive {
+			transition: none !important;
+		}
+
 		.hero-photo-container {
 			position: relative;
 			max-width: 320px;
@@ -211,7 +214,6 @@
 			margin: 0 auto;
 		}
 
-		/* Halo de luz sutil e suave */
 		.gold-halo {
 			position: absolute;
 			top: 50%;
@@ -237,7 +239,6 @@
 			margin-top: -10px;
 			position: relative;
 			z-index: 10;
-			transition: transform 0.2s ease, opacity 0.2s ease;
 		}
 
 		.hero-title {
@@ -265,6 +266,7 @@
 			gap: 12px;
 			justify-content: center;
 			align-items: center;
+			pointer-events: auto;
 		}
 
 		.btn-hero-clean {
@@ -289,7 +291,7 @@
 		/* Setinha Minimalista de Scroll */
 		.scroll-arrow {
 			position: absolute;
-			bottom: 22px;
+			bottom: 24px;
 			left: 50%;
 			transform: translateX(-50%);
 			color: rgba(212, 175, 55, 0.7);
@@ -298,12 +300,31 @@
 			cursor: pointer;
 			text-decoration: none;
 			z-index: 15;
-			transition: opacity 0.3s ease;
+			transition: opacity 0.2s ease;
+			pointer-events: auto;
 		}
 
 		@keyframes arrowFloat {
 			0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
 			50% { transform: translate(-50%, 8px); opacity: 1; }
+		}
+
+		/* ESPAÇADOR DE ROLAGEM DEDICADO: Garante que a foto apague 100% antes do site entrar na tela */
+		#hero-scroll-buffer {
+			height: 165vh;
+			height: 165dvh;
+			width: 100%;
+			pointer-events: none;
+		}
+
+		/* ==========================================================================
+		   ESTÁGIO 2: CONTEÚDO DO SITE (SÓ ENTRA APÓS A FOTO SUMIR)
+		   ========================================================================== */
+		#site-content {
+			position: relative;
+			z-index: 25;
+			background: #060607;
+			box-shadow: 0 -30px 60px rgba(6, 6, 7, 0.95);
 		}
 
 		/* ==========================================================================
@@ -315,7 +336,7 @@
 			left: 0;
 			right: 0;
 			height: 58px;
-			background: rgba(8, 8, 10, 0.85);
+			background: rgba(8, 8, 10, 0.9);
 			backdrop-filter: blur(16px);
 			-webkit-backdrop-filter: blur(16px);
 			border-top: 1px solid var(--gold-border-soft);
@@ -393,7 +414,7 @@
 			margin: 0 auto;
 			padding: 70px 20px;
 			position: relative;
-			z-index: 20;
+			z-index: 30;
 		}
 
 		.section-header {
@@ -449,7 +470,7 @@
 		}
 
 		/* ==========================================================================
-		   MOTION DINÂMICO CONECTADO AO SCROLL: CARDS ENTRAM E SAEM COM A ROLAGEM
+		   MOTION DOS CARDS: VINCULADO DIRETAMENTE AO SCROLL
 		   ========================================================================== */
 		.grid-square-cards {
 			display: grid;
@@ -469,7 +490,6 @@
 			}
 		}
 
-		/* Card Minimalista com Bordas Translúcidas */
 		.card-gold-square {
 			position: relative;
 			background: var(--bg-card);
@@ -480,7 +500,6 @@
 			display: flex;
 			flex-direction: column;
 			will-change: transform, opacity;
-			/* Transição suave e ultra rápida para acompanhar o scroll em tempo real sem engasgos */
 			transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.12s linear, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
 		}
 
@@ -490,7 +509,6 @@
 			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px var(--gold-glow);
 		}
 
-		/* Mídia e Conteúdo do Card */
 		.card-media {
 			position: relative;
 			width: 100%;
@@ -650,7 +668,7 @@
 			padding: 70px 20px 40px;
 			text-align: center;
 			position: relative;
-			z-index: 20;
+			z-index: 30;
 		}
 
 		.footer-box {
@@ -700,279 +718,280 @@
 	</div>
 
 	<!-- ==========================================================================
-	     2. DOBRA 1: HERO SCROLL TRACK (FOTO/TEXTO APAGAM ANTES DO CONTEÚDO)
+	     2. ESTÁGIO 1: HERO FIXO NA TELA (FOTO E TEXTO APAGAM ANTES DO SITE)
 	     ========================================================================== -->
-	<section class="hero-scroll-track" id="hero-track">
-		<div class="hero-sticky-container" id="hero-sticky">
+	<div id="hero-fixed-layer">
+		<div class="hero-photo-wrapper" id="hero-photo-box">
+			<div class="hero-photo-container">
+				<div class="gold-halo"></div>
+				<img src="images/natalia_cutout.png" alt="Natália Mariel Storymaker" class="natalia-cutout-img" />
+			</div>
 
-			<div class="hero-photo-wrapper" id="hero-photo-box">
-				<div class="hero-photo-container">
-					<div class="gold-halo"></div>
-					<img src="images/natalia_cutout.png" alt="Natália Mariel Storymaker" class="natalia-cutout-img" />
+			<div class="hero-copy">
+				<h1 class="hero-title">CONTEÚDO EM TEMPO REAL</h1>
+				<p class="hero-subtitle">
+					Viva cada instante do seu grande dia. Eternizamos os melhores momentos para suas redes sociais em até 24 horas.
+				</p>
+				<div class="hero-actions">
+					<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia!%20Gostaria%20de%20consultar%20disponibilidade%20para%20o%20meu%20evento." target="_blank" class="btn-hero-clean">
+						Falar no WhatsApp
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- Setinha Minimalista de Scroll -->
+		<a href="#site-content" class="scroll-arrow" id="hero-scroll-arrow" aria-label="Rolar para baixo">
+			<i class="fas fa-chevron-down"></i>
+		</a>
+	</div>
+
+	<!-- Espaçador onde acontece o desvanecimento total da foto antes do site surgir -->
+	<div id="hero-scroll-buffer"></div>
+
+	<!-- ==========================================================================
+	     3. ESTÁGIO 2: CONTEÚDO DO SITE (SÓ ENTRA APÓS A FOTO SUMIR 100%)
+	     ========================================================================== -->
+	<main id="site-content">
+
+		<!-- SEÇÃO DE PORTFÓLIO -->
+		<section class="section-container" id="portfolio">
+			<div class="section-header">
+				<span class="section-tag">Portfólio Selecionado</span>
+				<h2 class="section-title">TRABALHOS DE DESTAQUE</h2>
+			</div>
+
+			<!-- Abas Minimalistas de Filtro -->
+			<div class="filter-tabs">
+				<button class="filter-btn active" data-filter="all">TODOS (09)</button>
+				<button class="filter-btn" data-filter="famosos">CELEBRIDADES & VIP (03)</button>
+				<button class="filter-btn" data-filter="casamentos">CASAMENTOS (03)</button>
+				<button class="filter-btn" data-filter="15anos">15 ANOS (03)</button>
+			</div>
+
+			<!-- Grid dos Cards (Com Animação Lateral Bidirecional) -->
+			<div class="grid-square-cards">
+
+				<!-- ITEM 1: FAMOSO 1 -->
+				<div class="card-gold-square slide-from-left" data-category="famosos">
+					<div class="card-media">
+						<span class="card-tag">VIP GALA</span>
+						<img src="images/portfolio/famoso1.jpg" alt="Red Carpet Premiere" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Celebridades</span>
+						<h3 class="card-name">Red Carpet Premiere</h3>
+						<p class="card-desc">Cobertura de chegadas e bastidores dinâmicos no tapete vermelho em formato Reels.</p>
+						<div class="card-footer">
+							<span>FORMATO: 9:16</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
 				</div>
 
-				<div class="hero-copy">
-					<h1 class="hero-title">CONTEÚDO EM TEMPO REAL</h1>
-					<p class="hero-subtitle">
-						Viva cada instante do seu grande dia. Eternizamos os melhores momentos para suas redes sociais em até 24 horas.
+				<!-- ITEM 2: FAMOSO 2 -->
+				<div class="card-gold-square slide-from-right" data-category="famosos">
+					<div class="card-media">
+						<span class="card-tag">SHOW & ARTISTAS</span>
+						<img src="images/portfolio/famoso2.jpg" alt="Backstage Sunset Live" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Celebridades</span>
+						<h3 class="card-name">Backstage Sunset Live</h3>
+						<p class="card-desc">Camarins, energia de palco e cortes rítmicos acelerados para postar durante o show.</p>
+						<div class="card-footer">
+							<span>TEMPO REAL</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 3: FAMOSO 3 -->
+				<div class="card-gold-square slide-from-left" data-category="famosos">
+					<div class="card-media">
+						<span class="card-tag">INFLUENCERS</span>
+						<img src="images/portfolio/famoso3.jpg" alt="Lançamento Fashion VIP" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Moda & VIP</span>
+						<h3 class="card-name">Lançamento Fashion VIP</h3>
+						<p class="card-desc">Estética editorial refinada e dinâmica para marcas conceituadas e criadores de conteúdo.</p>
+						<div class="card-footer">
+							<span>4K HDR</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 4: CASAMENTO 1 -->
+				<div class="card-gold-square slide-from-right" data-category="casamentos">
+					<div class="card-media">
+						<span class="card-tag">PÔR DO SOL</span>
+						<img src="images/portfolio/casamento1.jpg" alt="Casamento Beatriz & Matheus" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Casamentos</span>
+						<h3 class="card-name">Beatriz & Matheus</h3>
+						<p class="card-desc">Cerimônia intimista à beira-mar. Stories no decorrer do evento e Reel cinematográfico.</p>
+						<div class="card-footer">
+							<span>IATE CLUBE</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 5: CASAMENTO 2 -->
+				<div class="card-gold-square slide-from-left" data-category="casamentos">
+					<div class="card-media">
+						<span class="card-tag">CERIMÔNIA</span>
+						<img src="images/portfolio/casamento2.jpg" alt="Casamento Lara & Guilherme" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Casamentos</span>
+						<h3 class="card-name">Lara & Guilherme</h3>
+						<p class="card-desc">Votos emocionantes e detalhes mais puros captados com discrição e olhar sensível.</p>
+						<div class="card-footer">
+							<span>ENTREGA 24H</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 6: CASAMENTO 3 -->
+				<div class="card-gold-square slide-from-right" data-category="casamentos">
+					<div class="card-media">
+						<span class="card-tag">AFTER PARTY</span>
+						<img src="images/portfolio/casamento3.jpg" alt="The Wedding Party" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">Casamentos</span>
+						<h3 class="card-name">The Wedding Party</h3>
+						<p class="card-desc">A energia da pista de dança fervendo com cortes verticais e áudios em alta.</p>
+						<div class="card-footer">
+							<span>FESTA COMPLETA</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 7: 15 ANOS 1 -->
+				<div class="card-gold-square slide-from-left" data-category="15anos">
+					<div class="card-media">
+						<span class="card-tag">DEBUTANTE</span>
+						<img src="images/portfolio/15anos1.jpg" alt="The Golden 15th Sofia" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">15 Anos</span>
+						<h3 class="card-name">The Golden 15th • Sofia</h3>
+						<p class="card-desc">A entrada de princesa e a valsa tradicional filmadas com enquadramentos de cinema.</p>
+						<div class="card-footer">
+							<span>LA MAISON</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 8: 15 ANOS 2 -->
+				<div class="card-gold-square slide-from-right" data-category="15anos">
+					<div class="card-media">
+						<span class="card-tag">PISTA NEON</span>
+						<img src="images/portfolio/15anos2.jpg" alt="Neon Night Alice" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">15 Anos</span>
+						<h3 class="card-name">Neon Night • Alice</h3>
+						<p class="card-desc">Luzes, confetes e a galera na balada. Reels editados com ritmo musical contagiante.</p>
+						<div class="card-footer">
+							<span>BALADA</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<!-- ITEM 9: 15 ANOS 3 -->
+				<div class="card-gold-square slide-from-left" data-category="15anos">
+					<div class="card-media">
+						<span class="card-tag">ROYAL GALA</span>
+						<img src="images/portfolio/15anos3.jpg" alt="Royal Debut Valentina" class="card-img" />
+					</div>
+					<div class="card-content">
+						<span class="card-category">15 Anos</span>
+						<h3 class="card-name">Royal Debut • Valentina</h3>
+						<p class="card-desc">Brinde familiar, corte do bolo e momentos espontâneos com alta definição vertical.</p>
+						<div class="card-footer">
+							<span>IPHONE RIG PRO</span>
+							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+		<!-- SEÇÃO DE DIFERENCIAIS -->
+		<section class="section-container">
+			<div class="section-header">
+				<span class="section-tag">Diferenciais</span>
+				<h2 class="section-title">O FORMATO STORYMAKER</h2>
+			</div>
+
+			<div class="bento-grid">
+				<div class="bento-card bento-wide slide-from-left">
+					<div class="bento-num">24H</div>
+					<h3 class="bento-title">Entrega no Calor da Festa</h3>
+					<p class="bento-text">
+						Você não espera meses para postar. Recebe os melhores vídeos e arquivos brutos em até 24 horas enquanto as lembranças ainda estão vivas.
 					</p>
-					<div class="hero-actions">
-						<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia!%20Gostaria%20de%20consultar%20disponibilidade%20para%20o%20meu%20evento." target="_blank" class="btn-hero-clean">
-							Falar no WhatsApp
-						</a>
-					</div>
+				</div>
+
+				<div class="bento-card slide-from-right">
+					<div class="bento-num">9:16</div>
+					<h3 class="bento-title">100% Vertical</h3>
+					<p class="bento-text">
+						Captação nativa pensada para Stories, Reels e TikTok sem cortes indesejados.
+					</p>
+				</div>
+
+				<div class="bento-card slide-from-left">
+					<div class="bento-num">100%</div>
+					<h3 class="bento-title">Discreta & Invisível</h3>
+					<p class="bento-text">
+						Sem holofotes quentes ou equipamentos volumosos que intimidam os convidados.
+					</p>
+				</div>
+
+				<div class="bento-card bento-wide slide-from-right">
+					<div class="bento-num">VIP</div>
+					<h3 class="bento-title">Seus Convidados Aproveitam</h3>
+					<p class="bento-text">
+						Amigos e família curtem o evento de verdade sem precisar segurar o celular para filmar.
+					</p>
 				</div>
 			</div>
+		</section>
 
-			<!-- Setinha Minimalista de Scroll -->
-			<a href="#portfolio" class="scroll-arrow" aria-label="Rolar para baixo">
-				<i class="fas fa-chevron-down"></i>
-			</a>
-		</div>
-	</section>
+		<!-- RODAPÉ MINIMALISTA -->
+		<footer class="footer-section">
+			<div class="footer-box">
+				<span class="section-tag">Disponibilidade</span>
+				<h2 class="section-title" style="margin-bottom: 12px; font-size: 1.5rem;">VAMOS AGENDAR SUA DATA?</h2>
+				<p class="hero-subtitle" style="margin-bottom: 24px;">
+					Atendimento presencial em Fortaleza e disponibilidade para viagens sob consulta.
+				</p>
+				<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia,%20quero%20solicitar%20um%20or%C3%A7amento!" target="_blank" class="btn-hero-clean">
+					Conversar no WhatsApp
+				</a>
+			</div>
+
+			<div class="footer-copy">
+				&copy; Natália Mariel • StoryMaker • Fortaleza - CE
+			</div>
+		</footer>
+
+	</main>
 
 	<!-- ==========================================================================
-	     3. PORTFÓLIO: CARDS COM ENTRADA E SAÍDA CONECTADAS AO SCROLL
-	     ========================================================================== -->
-	<section class="section-container" id="portfolio">
-		<div class="section-header">
-			<span class="section-tag">Portfólio Selecionado</span>
-			<h2 class="section-title">TRABALHOS DE DESTAQUE</h2>
-		</div>
-
-		<!-- Abas Minimalistas de Filtro -->
-		<div class="filter-tabs">
-			<button class="filter-btn active" data-filter="all">TODOS (09)</button>
-			<button class="filter-btn" data-filter="famosos">CELEBRIDADES & VIP (03)</button>
-			<button class="filter-btn" data-filter="casamentos">CASAMENTOS (03)</button>
-			<button class="filter-btn" data-filter="15anos">15 ANOS (03)</button>
-		</div>
-
-		<!-- Grid dos Cards (Com Animação Lateral Bidirecional Conectada à Barra de Rolagem) -->
-		<div class="grid-square-cards">
-
-			<!-- ITEM 1: FAMOSO 1 (Vem da Esquerda) -->
-			<div class="card-gold-square slide-from-left" data-category="famosos">
-				<div class="card-media">
-					<span class="card-tag">VIP GALA</span>
-					<img src="images/portfolio/famoso1.jpg" alt="Red Carpet Premiere" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Celebridades</span>
-					<h3 class="card-name">Red Carpet Premiere</h3>
-					<p class="card-desc">Cobertura de chegadas e bastidores dinâmicos no tapete vermelho em formato Reels.</p>
-					<div class="card-footer">
-						<span>FORMATO: 9:16</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 2: FAMOSO 2 (Vem da Direita) -->
-			<div class="card-gold-square slide-from-right" data-category="famosos">
-				<div class="card-media">
-					<span class="card-tag">SHOW & ARTISTAS</span>
-					<img src="images/portfolio/famoso2.jpg" alt="Backstage Sunset Live" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Celebridades</span>
-					<h3 class="card-name">Backstage Sunset Live</h3>
-					<p class="card-desc">Camarins, energia de palco e cortes rítmicos acelerados para postar durante o show.</p>
-					<div class="card-footer">
-						<span>TEMPO REAL</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 3: FAMOSO 3 (Vem da Esquerda) -->
-			<div class="card-gold-square slide-from-left" data-category="famosos">
-				<div class="card-media">
-					<span class="card-tag">INFLUENCERS</span>
-					<img src="images/portfolio/famoso3.jpg" alt="Lançamento Fashion VIP" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Moda & VIP</span>
-					<h3 class="card-name">Lançamento Fashion VIP</h3>
-					<p class="card-desc">Estética editorial refinada e dinâmica para marcas conceituadas e criadores de conteúdo.</p>
-					<div class="card-footer">
-						<span>4K HDR</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 4: CASAMENTO 1 (Vem da Direita) -->
-			<div class="card-gold-square slide-from-right" data-category="casamentos">
-				<div class="card-media">
-					<span class="card-tag">PÔR DO SOL</span>
-					<img src="images/portfolio/casamento1.jpg" alt="Casamento Beatriz & Matheus" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Casamentos</span>
-					<h3 class="card-name">Beatriz & Matheus</h3>
-					<p class="card-desc">Cerimônia intimista à beira-mar. Stories no decorrer do evento e Reel cinematográfico.</p>
-					<div class="card-footer">
-						<span>IATE CLUBE</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 5: CASAMENTO 2 (Vem da Esquerda) -->
-			<div class="card-gold-square slide-from-left" data-category="casamentos">
-				<div class="card-media">
-					<span class="card-tag">CERIMÔNIA</span>
-					<img src="images/portfolio/casamento2.jpg" alt="Casamento Lara & Guilherme" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Casamentos</span>
-					<h3 class="card-name">Lara & Guilherme</h3>
-					<p class="card-desc">Votos emocionantes e detalhes mais puros captados com discrição e olhar sensível.</p>
-					<div class="card-footer">
-						<span>ENTREGA 24H</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 6: CASAMENTO 3 (Vem da Direita) -->
-			<div class="card-gold-square slide-from-right" data-category="casamentos">
-				<div class="card-media">
-					<span class="card-tag">AFTER PARTY</span>
-					<img src="images/portfolio/casamento3.jpg" alt="The Wedding Party" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">Casamentos</span>
-					<h3 class="card-name">The Wedding Party</h3>
-					<p class="card-desc">A energia da pista de dança fervendo com cortes verticais e áudios em alta.</p>
-					<div class="card-footer">
-						<span>FESTA COMPLETA</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 7: 15 ANOS 1 (Vem da Esquerda) -->
-			<div class="card-gold-square slide-from-left" data-category="15anos">
-				<div class="card-media">
-					<span class="card-tag">DEBUTANTE</span>
-					<img src="images/portfolio/15anos1.jpg" alt="The Golden 15th Sofia" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">15 Anos</span>
-					<h3 class="card-name">The Golden 15th • Sofia</h3>
-					<p class="card-desc">A entrada de princesa e a valsa tradicional filmadas com enquadramentos de cinema.</p>
-					<div class="card-footer">
-						<span>LA MAISON</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 8: 15 ANOS 2 (Vem da Direita) -->
-			<div class="card-gold-square slide-from-right" data-category="15anos">
-				<div class="card-media">
-					<span class="card-tag">PISTA NEON</span>
-					<img src="images/portfolio/15anos2.jpg" alt="Neon Night Alice" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">15 Anos</span>
-					<h3 class="card-name">Neon Night • Alice</h3>
-					<p class="card-desc">Luzes, confetes e a galera na balada. Reels editados com ritmo musical contagiante.</p>
-					<div class="card-footer">
-						<span>BALADA</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<!-- ITEM 9: 15 ANOS 3 (Vem da Esquerda) -->
-			<div class="card-gold-square slide-from-left" data-category="15anos">
-				<div class="card-media">
-					<span class="card-tag">ROYAL GALA</span>
-					<img src="images/portfolio/15anos3.jpg" alt="Royal Debut Valentina" class="card-img" />
-				</div>
-				<div class="card-content">
-					<span class="card-category">15 Anos</span>
-					<h3 class="card-name">Royal Debut • Valentina</h3>
-					<p class="card-desc">Brinde familiar, corte do bolo e momentos espontâneos com alta definição vertical.</p>
-					<div class="card-footer">
-						<span>IPHONE RIG PRO</span>
-						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</section>
-
-	<!-- ==========================================================================
-	     4. DIFERENCIAIS EM CARDS TRANSLÚCIDOS
-	     ========================================================================== -->
-	<section class="section-container">
-		<div class="section-header">
-			<span class="section-tag">Diferenciais</span>
-			<h2 class="section-title">O FORMATO STORYMAKER</h2>
-		</div>
-
-		<div class="bento-grid">
-			<div class="bento-card bento-wide slide-from-left">
-				<div class="bento-num">24H</div>
-				<h3 class="bento-title">Entrega no Calor da Festa</h3>
-				<p class="bento-text">
-					Você não espera meses para postar. Recebe os melhores vídeos e arquivos brutos em até 24 horas enquanto as lembranças ainda estão vivas.
-				</p>
-			</div>
-
-			<div class="bento-card slide-from-right">
-				<div class="bento-num">9:16</div>
-				<h3 class="bento-title">100% Vertical</h3>
-				<p class="bento-text">
-					Captação nativa pensada para Stories, Reels e TikTok sem cortes indesejados.
-				</p>
-			</div>
-
-			<div class="bento-card slide-from-left">
-				<div class="bento-num">100%</div>
-				<h3 class="bento-title">Discreta & Invisível</h3>
-				<p class="bento-text">
-					Sem holofotes quentes ou equipamentos volumosos que intimidam os convidados.
-				</p>
-			</div>
-
-			<div class="bento-card bento-wide slide-from-right">
-				<div class="bento-num">VIP</div>
-				<h3 class="bento-title">Seus Convidados Aproveitam</h3>
-				<p class="bento-text">
-					Amigos e família curtem o evento de verdade sem precisar segurar o celular para filmar.
-				</p>
-			</div>
-		</div>
-	</section>
-
-	<!-- ==========================================================================
-	     5. RODAPÉ MINIMALISTA
-	     ========================================================================== -->
-	<footer class="footer-section">
-		<div class="footer-box">
-			<span class="section-tag">Disponibilidade</span>
-			<h2 class="section-title" style="margin-bottom: 12px; font-size: 1.5rem;">VAMOS AGENDAR SUA DATA?</h2>
-			<p class="hero-subtitle" style="margin-bottom: 24px;">
-				Atendimento presencial em Fortaleza e disponibilidade para viagens sob consulta.
-			</p>
-			<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia,%20quero%20solicitar%20um%20or%C3%A7amento!" target="_blank" class="btn-hero-clean">
-				Conversar no WhatsApp
-			</a>
-		</div>
-
-		<div class="footer-copy">
-			&copy; Natália Mariel • StoryMaker • Fortaleza - CE
-		</div>
-	</footer>
-
-	<!-- ==========================================================================
-	     6. BARRA INFERIOR MODERNA (SÓ SURGE APÓS A ROLAGEM)
+	     4. BARRA INFERIOR MODERNA (SÓ SURGE APÓS A ROLAGEM)
 	     ========================================================================== -->
 	<nav class="bottom-nav-bar" id="bottom-nav-bar" aria-label="Navegação inferior">
 		<div class="bottom-nav-left">
@@ -999,15 +1018,15 @@
 	</nav>
 
 	<!-- ==========================================================================
-	     SCRIPTS: CONTROLE LIMPO, SCROLL FADE PERFEITO & MOTION CONTÍNUO DOS CARDS
+	     SCRIPTS: TRANSIÇÃO EM DUAS ETAPAS (PRIMEIRO SOME A FOTO, DEPOIS ENTRA O SITE)
 	     ========================================================================== -->
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
 			const introOverlay = document.getElementById('intro-overlay');
 			const introVideo = document.getElementById('intro-video');
-			const heroTrack = document.getElementById('hero-track');
+			const heroFixedLayer = document.getElementById('hero-fixed-layer');
 			const heroPhotoBox = document.getElementById('hero-photo-box');
-			const scrollArrow = document.querySelector('.scroll-arrow');
+			const heroScrollArrow = document.getElementById('hero-scroll-arrow');
 			const bottomNavBar = document.getElementById('bottom-nav-bar');
 
 			let introCompleted = false;
@@ -1022,7 +1041,15 @@
 				introOverlay.classList.add('fade-out');
 
 				setTimeout(() => {
+					introOverlay.style.display = 'none';
+				}, 950);
+
+				setTimeout(() => {
 					heroPhotoBox.classList.add('revealed');
+					// Após transição inicial de entrada, libera para animação direta no scroll sem atrasos
+					setTimeout(() => {
+						heroPhotoBox.classList.add('interactive');
+					}, 1300);
 				}, 150);
 
 				startSubtleAmbientAudio();
@@ -1030,61 +1057,81 @@
 
 			introVideo.addEventListener('ended', finishIntro);
 			introOverlay.addEventListener('click', finishIntro);
+			introOverlay.addEventListener('touchstart', finishIntro, { passive: true });
+
+			// Clique suave na setinha para rolar direto até o portfólio
+			if (heroScrollArrow) {
+				heroScrollArrow.addEventListener('click', (e) => {
+					e.preventDefault();
+					const siteContent = document.getElementById('site-content');
+					if (siteContent) {
+						siteContent.scrollIntoView({ behavior: 'smooth' });
+					}
+				});
+			}
 
 			// ======================================================================
-			// 2. SCROLL DRIVEN: HERO FADE + MOTION CONTÍNUO DOS CARDS COM A ROLAGEM
+			// 2. TRANSIÇÃO SEQUENCIAL RIGOROSA:
+			//    ETAPA 1: A FOTO E TEXTO APAGAM TOTALMENTE NO LUGAR (0 a 48vh)
+			//    PAUSA:   MOMENTO ESCURO COM MARQUEE & BRILHOS (48vh a 65vh)
+			//    ETAPA 2: SOMENTE DEPOIS O CONTEÚDO DO SITE ENTRA NA TELA (>= 65vh)
 			// ======================================================================
 			const animatedCards = document.querySelectorAll('.slide-from-left, .slide-from-right');
-
 			let isTicking = false;
 
-			function handleScrollAnimations() {
-				const vh = window.innerHeight;
+			function handleScrollSequence() {
 				const scrollY = window.scrollY;
+				const vh = window.innerHeight;
 
-				// --- A. Transição da Foto do Hero & Barra Inferior ---
-				if (heroTrack && heroPhotoBox) {
-					const trackRect = heroTrack.getBoundingClientRect();
-					const scrollableDist = heroTrack.offsetHeight - vh;
-					const currentScrolled = -trackRect.top;
-					const scrollProgress = Math.min(1, Math.max(0, currentScrolled / scrollableDist));
+				// Desativa transições CSS imediatamente na primeira rolagem para resposta instantânea ao toque
+				if (scrollY > 5 && heroPhotoBox && !heroPhotoBox.classList.contains('interactive')) {
+					heroPhotoBox.classList.add('interactive');
+				}
 
-					if (heroPhotoBox.classList.contains('revealed')) {
-						const fadeProgress = Math.min(1, scrollProgress / 0.70);
-						const opacity = Math.max(0, 1 - fadeProgress);
-						const scale = 1 - (fadeProgress * 0.18);
+				// Distância onde a foto e o texto somem por completo (48% da altura da tela)
+				const fadeDistance = vh * 0.48;
+				const fadeProgress = Math.min(1, Math.max(0, scrollY / fadeDistance));
 
-						heroPhotoBox.style.opacity = opacity;
-						heroPhotoBox.style.transform = `scale(${scale})`;
-						heroPhotoBox.style.pointerEvents = opacity <= 0.05 ? 'none' : 'auto';
+				// A foto e texto diminuem sutilmente e desvanecem no centro da tela
+				const opacity = Math.max(0, 1 - fadeProgress);
+				const scale = 1 - (fadeProgress * 0.12);
 
-						if (scrollArrow) {
-							scrollArrow.style.opacity = Math.max(0, 1 - fadeProgress * 3);
-						}
+				if (heroPhotoBox) {
+					heroPhotoBox.style.opacity = opacity;
+					heroPhotoBox.style.transform = `scale(${scale})`;
+				}
 
-						if (scrollProgress >= 0.55) {
-							bottomNavBar.classList.add('is-visible');
-						} else {
-							bottomNavBar.classList.remove('is-visible');
-						}
+				if (heroScrollArrow) {
+					heroScrollArrow.style.opacity = Math.max(0, 1 - fadeProgress * 3);
+				}
+
+				// Se a foto apagou completamente, oculta da tela para desimpedir cliques e economizar GPU
+				if (heroFixedLayer) {
+					heroFixedLayer.style.visibility = opacity <= 0.001 ? 'hidden' : 'visible';
+				}
+
+				// O conteúdo do site só começa a entrar na tela quando scrollY atinge 65vh
+				// (165vh do buffer menos 100vh da altura da tela = 65vh).
+				// A barra inferior surge suavemente assim que o site começa a aparecer
+				if (bottomNavBar) {
+					if (scrollY >= vh * 0.65) {
+						bottomNavBar.classList.add('is-visible');
+					} else {
+						bottomNavBar.classList.remove('is-visible');
 					}
 				}
 
-				// --- B. Motion Contínuo dos Cards (Entram e Saem com a Rolagem) ---
+				// Animação lateral bidirecional dos cards (conectada diretamente ao scroll)
 				const isMobile = window.innerWidth < 768;
-				const maxSlideDistance = isMobile ? 70 : 120; // Distância de deslocamento lateral em pixels
+				const maxSlideDistance = isMobile ? 60 : 110;
 
 				animatedCards.forEach(card => {
 					if (card.style.display === 'none') return;
 
 					const rect = card.getBoundingClientRect();
-
-					// O card começa a se mover quando seu topo chega a 95% da tela
-					// e fica 100% encaixado no centro quando atinge 65% da tela
 					const triggerPoint = vh * 0.95;
 					const settlePoint = vh * 0.65;
 
-					// Progresso contínuo de 0 (fora da tela) a 1 (centralizado no lugar)
 					let progress = (triggerPoint - rect.top) / (triggerPoint - settlePoint);
 					progress = Math.min(1, Math.max(0, progress));
 
@@ -1093,12 +1140,10 @@
 						? -(1 - progress) * maxSlideDistance 
 						: (1 - progress) * maxSlideDistance;
 
-					// Opacidade também vinculada diretamente à rolagem
-					const opacity = Math.min(1, Math.max(0, progress * 1.25 - 0.1));
+					const cardOpacity = Math.min(1, Math.max(0, progress * 1.25 - 0.1));
 
-					// Aplica a posição calculada diretamente com a barra de rolagem (bidirecional!)
 					card.style.transform = `translateX(${currentOffset}px)`;
-					card.style.opacity = opacity;
+					card.style.opacity = cardOpacity;
 				});
 
 				isTicking = false;
@@ -1106,13 +1151,12 @@
 
 			window.addEventListener('scroll', () => {
 				if (!isTicking) {
-					requestAnimationFrame(handleScrollAnimations);
+					requestAnimationFrame(handleScrollSequence);
 					isTicking = true;
 				}
 			}, { passive: true });
 
-			// Execução inicial
-			handleScrollAnimations();
+			handleScrollSequence();
 
 			// ======================================================================
 			// 3. BRILHOS DOURADOS FLUTUANTES (GOLD SPARKLE PARTICLES CANVAS)
@@ -1129,7 +1173,7 @@
 			window.addEventListener('resize', resizeCanvas);
 
 			const particles = [];
-			const numParticles = window.innerWidth < 768 ? 32 : 55;
+			const numParticles = window.innerWidth < 768 ? 30 : 50;
 
 			for (let i = 0; i < numParticles; i++) {
 				particles.push({
@@ -1264,8 +1308,7 @@
 						}
 					});
 
-					// Recalcula imediatamente a posição com o scroll
-					handleScrollAnimations();
+					handleScrollSequence();
 				});
 			});
 		});
