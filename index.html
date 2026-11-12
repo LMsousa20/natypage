@@ -65,7 +65,7 @@
 		}
 
 		/* ==========================================================================
-		   CANVAS DE BRILHOS E PARTÍCULAS DOURADAS
+		   CANVAS DE BRILHOS E PARTÍCULAS DOURADAS (SUAVE E DISCRETO)
 		   ========================================================================== */
 		#gold-sparkles-canvas {
 			position: fixed;
@@ -75,7 +75,7 @@
 			height: 100vh;
 			pointer-events: none;
 			z-index: 0;
-			opacity: 0.85;
+			opacity: 0.40;
 		}
 
 		/* ==========================================================================
@@ -209,30 +209,39 @@
 
 		.hero-photo-container {
 			position: relative;
-			max-width: 320px;
-			width: 78vw;
+			max-width: 290px;
+			width: 72vw;
+			max-height: 48vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			margin: 0 auto;
 		}
 
+		/* Halo de luz sutil e refinado (elimina o excesso de brilho para preservar o fundo escuro) */
 		.gold-halo {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			width: 280px;
-			height: 320px;
-			background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%);
+			width: 260px;
+			height: 300px;
+			background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
 			filter: blur(40px);
 			z-index: -1;
 			pointer-events: none;
 		}
 
 		.natalia-cutout-img {
-			width: 100%;
+			width: auto;
+			max-width: 100%;
+			max-height: 46vh;
 			height: auto;
 			display: block;
 			user-select: none;
 			pointer-events: none;
+			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+			-webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 		}
 
 		.hero-copy {
@@ -772,16 +781,16 @@
 			<!-- Grid dos Cards (Com Animação Lateral Bidirecional) -->
 			<div class="grid-square-cards">
 
-				<!-- ITEM 1: NATÁLIA STORYMAKER VIP -->
+				<!-- ITEM 1: FAMOSO 1 -->
 				<div class="card-gold-square slide-from-left" data-category="famosos">
 					<div class="card-media">
-						<span class="card-tag">STORYMAKER VIP</span>
-						<img src="images/portfolio/natalia_storymaker.jpg" alt="Natália Mariel - StoryMaker VIP" class="card-img" style="object-position: center 15%;" />
+						<span class="card-tag">VIP GALA</span>
+						<img src="images/portfolio/famoso1.jpg" alt="Red Carpet Premiere" class="card-img" />
 					</div>
 					<div class="card-content">
-						<span class="card-category">Celebridades & VIP</span>
-						<h3 class="card-name">Cobertura VIP em Tempo Real</h3>
-						<p class="card-desc">Captação dinâmica, olhar refinado e entrega imediata de Stories e Reels de altíssimo padrão.</p>
+						<span class="card-category">Celebridades</span>
+						<h3 class="card-name">Red Carpet Premiere</h3>
+						<p class="card-desc">Cobertura de chegadas e bastidores dinâmicos no tapete vermelho em formato Reels.</p>
 						<div class="card-footer">
 							<span>FORMATO: 9:16</span>
 							<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
