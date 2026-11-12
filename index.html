@@ -1,247 +1,1275 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 
 <head>
-	<title>Natália Oliveira • StoryMaker</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	<noscript>
-		<link rel="stylesheet" href="assets/css/noscript.css" />
-	</noscript>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Natália Mariel • StoryMaker VIP</title>
+	<meta name="description" content="Cobertura de bastidores em tempo real para Casamentos, Celebridades e Festas de 15 Anos em Fortaleza e em todo o Brasil. Vídeos verticais entregues em até 24h." />
+	
+	<link rel="icon" href="images/natalia_cutout.png" type="image/png" />
+
+	<!-- Google Fonts: Editorial Luxo & Minimalismo -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+
+	<!-- FontAwesome Icons -->
+	<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
 
 	<style>
-		/* Fundo com degradê suave e elegante */
-		body {
-			background-color: #000 !important;
-			background-image: linear-gradient(135deg, #0f172a 0%, #000000 100%) !important;
+		/* ==========================================================================
+		   DESIGN SYSTEM: MINIMALISTA, DARK CHIC & BORDAS TRANSLÚCIDAS
+		   ========================================================================== */
+		:root {
+			--bg-main: #060607;
+			--bg-card: rgba(14, 14, 17, 0.75);
+			--bg-card-hover: rgba(22, 22, 27, 0.9);
+			
+			/* Ouro Elegante e Bordas Suaves Translúcidas */
+			--gold-primary: #d4af37;
+			--gold-light: #f5e4b8;
+			--gold-border-soft: rgba(212, 175, 55, 0.16);
+			--gold-border-hover: rgba(212, 175, 55, 0.45);
+			--gold-glow: rgba(212, 175, 55, 0.18);
+			
+			--text-white: #ffffff;
+			--text-muted: #888891;
+			--text-subtle: #55555c;
+
+			--font-display: 'Cinzel', serif;
+			--font-body: 'Plus Jakarta Sans', sans-serif;
+			--font-mono: 'Space Grotesk', monospace;
 		}
 
-		/* Cor do nome e destaques */
-		h1,
-		h2,
-		strong {
-			color: #333 !important;
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			border-radius: 0px !important; /* TOTALMENTE QUADRADO, ZERO CURVAS */
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		html {
+			scroll-behavior: smooth;
+			background-color: var(--bg-main);
+			color: var(--text-white);
+			font-family: var(--font-body);
+			overflow-x: hidden;
+		}
+
+		body {
+			background-color: var(--bg-main);
+			min-height: 100vh;
+			overflow-x: hidden;
+			position: relative;
+			padding-bottom: 60px; /* Espaço para a barra inferior não cobrir o rodapé */
+		}
+
+		/* ==========================================================================
+		   CANVAS DE BRILHOS E PARTÍCULAS DOURADAS
+		   ========================================================================== */
+		#gold-sparkles-canvas {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			pointer-events: none;
+			z-index: 0;
+			opacity: 0.85;
+		}
+
+		/* ==========================================================================
+		   NOME FIXO NO FUNDO, NO MEIO DA TELA, MOVIMENTANDO SOMENTE LATERAL
+		   ========================================================================== */
+		.fixed-bg-marquee {
+			position: fixed;
+			top: 50%;
+			left: 0;
+			width: 100vw;
+			transform: translateY(-50%);
+			overflow: hidden;
+			pointer-events: none;
+			z-index: 1; /* Fica no fundo absoluto, atrás de todo o conteúdo */
+			white-space: nowrap;
+		}
+
+		.marquee-track {
+			display: inline-flex;
+			width: max-content;
+			animation: marqueeSlideLeft 25s linear infinite;
+			will-change: transform;
+		}
+
+		.marquee-track span {
+			display: inline-block;
+			font-family: var(--font-display);
+			font-size: clamp(3.8rem, 13vw, 11rem);
+			font-weight: 900;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: transparent;
+			-webkit-text-stroke: 1.5px rgba(212, 175, 55, 0.14);
+			text-shadow: 0 0 35px rgba(212, 175, 55, 0.08);
+			padding-right: 40px;
+			white-space: nowrap;
+		}
+
+		@keyframes marqueeSlideLeft {
+			0% {
+				transform: translateX(0);
+			}
+			100% {
+				transform: translateX(-50%);
+			}
+		}
+
+		/* ==========================================================================
+		   CAMADA DE VÍDEO INTRO (LIMPO, SEM POLUIÇÃO)
+		   ========================================================================== */
+		#intro-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: #000000;
+			z-index: 99999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.9s;
+			cursor: pointer;
+		}
+
+		#intro-overlay.fade-out {
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+		}
+
+		.intro-video-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			max-width: 500px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		#intro-video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		/* ==========================================================================
+		   HERO STICKY SCROLL TRACK: FOTO E TEXTO APAGAM TOTALMENTE ANTES DO SITE
+		   ========================================================================== */
+		.hero-scroll-track {
+			position: relative;
+			height: 180vh; /* Pista dedicada para a transição suave */
+			z-index: 10;
+		}
+
+		.hero-sticky-container {
+			position: sticky;
+			top: 0;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 40px 20px;
+			overflow: hidden;
+		}
+
+		.hero-photo-wrapper {
+			position: relative;
+			z-index: 5;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			opacity: 0;
+			transform: scale(0.96);
+			transition: opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+			will-change: opacity, transform;
+		}
+
+		.hero-photo-wrapper.revealed {
+			opacity: 1;
+			transform: scale(1);
+		}
+
+		.hero-photo-container {
+			position: relative;
+			max-width: 320px;
+			width: 78vw;
+			margin: 0 auto;
+		}
+
+		/* Halo de luz sutil e suave */
+		.gold-halo {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 280px;
+			height: 320px;
+			background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%);
+			filter: blur(40px);
+			z-index: -1;
+			pointer-events: none;
+		}
+
+		.natalia-cutout-img {
+			width: 100%;
+			height: auto;
+			display: block;
+			user-select: none;
+			pointer-events: none;
+		}
+
+		.hero-copy {
+			margin-top: -10px;
+			position: relative;
+			z-index: 10;
+			transition: transform 0.2s ease, opacity 0.2s ease;
+		}
+
+		.hero-title {
+			font-family: var(--font-display);
+			font-size: clamp(1.8rem, 5.2vw, 2.9rem);
+			font-weight: 700;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: #ffffff;
+			line-height: 1.15;
+			margin-bottom: 8px;
+		}
+
+		.hero-subtitle {
+			font-size: 0.9rem;
+			color: var(--text-muted);
+			max-width: 440px;
+			line-height: 1.5;
+			margin: 0 auto 16px;
+			font-weight: 300;
+		}
+
+		.hero-actions {
+			display: flex;
+			gap: 12px;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.btn-hero-clean {
+			background: rgba(212, 175, 55, 0.1);
+			color: var(--gold-light);
+			font-family: var(--font-mono);
+			font-size: 0.75rem;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			padding: 12px 24px;
+			text-decoration: none;
+			border: 1px solid var(--gold-border-soft);
+			transition: all 0.3s ease;
+		}
+
+		.btn-hero-clean:hover {
+			border-color: var(--gold-border-hover);
+			background: rgba(212, 175, 55, 0.2);
+			color: #fff;
+		}
+
+		/* Setinha Minimalista de Scroll */
+		.scroll-arrow {
+			position: absolute;
+			bottom: 22px;
+			left: 50%;
+			transform: translateX(-50%);
+			color: rgba(212, 175, 55, 0.7);
+			font-size: 1.2rem;
+			animation: arrowFloat 1.8s infinite ease-in-out;
+			cursor: pointer;
+			text-decoration: none;
+			z-index: 15;
+			transition: opacity 0.3s ease;
+		}
+
+		@keyframes arrowFloat {
+			0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
+			50% { transform: translate(-50%, 8px); opacity: 1; }
+		}
+
+		/* ==========================================================================
+		   BARRA INFERIOR MODERNA (SÓ APARECE APÓS A ROLAGEM)
+		   ========================================================================== */
+		.bottom-nav-bar {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 58px;
+			background: rgba(8, 8, 10, 0.85);
+			backdrop-filter: blur(16px);
+			-webkit-backdrop-filter: blur(16px);
+			border-top: 1px solid var(--gold-border-soft);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 24px;
+			z-index: 10000;
+			transform: translateY(100%);
+			opacity: 0;
+			pointer-events: none;
+			transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+		}
+
+		.bottom-nav-bar.is-visible {
+			transform: translateY(0);
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.bottom-nav-left {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.bottom-author-name {
+			font-family: var(--font-display);
+			font-size: 0.85rem;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: #ffffff;
 			font-weight: 700;
 		}
 
-		/* Cor dos links e ícones ao passar o mouse */
-		#nav a:hover,
-		.jumplink:hover {
-			color: #c5a059 !important;
-			/* Dourado Wedding */
-		}
-
-		/* Estilo especial para o botão de orçamento no Home */
-		.btn-whatsapp {
+		.bottom-author-dot {
+			width: 5px;
+			height: 5px;
+			background: var(--gold-primary);
 			display: inline-block;
-			margin-top: 20px;
-			padding: 10px 25px;
-			background-color: #a1a1a1;
-			color: #fff !important;
-			border-radius: 50px;
-			text-decoration: none;
-			font-weight: bold;
-			transition: background 0.3s;
 		}
 
-		.btn-whatsapp:hover {
-			background-color: #128c7e;
-		}
-
-		Ajuste na foto de perfil .panel.intro .pic img {
-			border: 5px solid #fff;
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-		}
-
-		/* Container dos botões */
-		.contact-buttons {
+		.bottom-nav-right {
 			display: flex;
-			gap: 15px;
-			justify-content: center;
-			margin: 30px 0;
-			flex-wrap: wrap;
+			align-items: center;
+			gap: 16px;
 		}
 
-		/* Estilo Base dos Botões */
-		.btn-contact {
+		.bottom-icon-link {
+			color: var(--gold-light);
+			font-size: 1.15rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 38px;
+			height: 38px;
+			border: 1px solid var(--gold-border-soft);
+			background: rgba(14, 14, 17, 0.6);
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+
+		.bottom-icon-link:hover {
+			border-color: var(--gold-border-hover);
+			background: rgba(212, 175, 55, 0.15);
+			color: #ffffff;
+			transform: translateY(-2px);
+		}
+
+		/* ==========================================================================
+		   CONTAINERS & CABEÇALHOS DE SEÇÃO
+		   ========================================================================== */
+		.section-container {
+			max-width: 1140px;
+			margin: 0 auto;
+			padding: 70px 20px;
+			position: relative;
+			z-index: 20;
+		}
+
+		.section-header {
+			margin-bottom: 35px;
+		}
+
+		.section-tag {
+			font-family: var(--font-mono);
+			font-size: 0.68rem;
+			color: rgba(212, 175, 55, 0.85);
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			margin-bottom: 6px;
+			display: block;
+		}
+
+		.section-title {
+			font-family: var(--font-display);
+			font-size: clamp(1.6rem, 3.8vw, 2.4rem);
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: #ffffff;
+			line-height: 1.2;
+		}
+
+		/* Filtros Minimalistas */
+		.filter-tabs {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-bottom: 30px;
+		}
+
+		.filter-btn {
+			background: transparent;
+			border: 1px solid var(--gold-border-soft);
+			color: var(--text-muted);
+			font-family: var(--font-mono);
+			font-size: 0.68rem;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			padding: 8px 14px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.filter-btn:hover,
+		.filter-btn.active {
+			border-color: var(--gold-border-hover);
+			color: #fff;
+			background: rgba(212, 175, 55, 0.12);
+		}
+
+		/* ==========================================================================
+		   MOTION DINÂMICO CONECTADO AO SCROLL: CARDS ENTRAM E SAEM COM A ROLAGEM
+		   ========================================================================== */
+		.grid-square-cards {
+			display: grid;
+			grid-template-columns: repeat(1, 1fr);
+			gap: 22px;
+		}
+
+		@media (min-width: 640px) {
+			.grid-square-cards {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (min-width: 1024px) {
+			.grid-square-cards {
+				grid-template-columns: repeat(3, 1fr);
+			}
+		}
+
+		/* Card Minimalista com Bordas Translúcidas */
+		.card-gold-square {
+			position: relative;
+			background: var(--bg-card);
+			border: 1px solid var(--gold-border-soft);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			will-change: transform, opacity;
+			/* Transição suave e ultra rápida para acompanhar o scroll em tempo real sem engasgos */
+			transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.12s linear, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+		}
+
+		.card-gold-square:hover {
+			border-color: var(--gold-border-hover);
+			background: var(--bg-card-hover);
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px var(--gold-glow);
+		}
+
+		/* Mídia e Conteúdo do Card */
+		.card-media {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 4/5;
+			background: #09090b;
+			overflow: hidden;
+			border-bottom: 1px solid var(--gold-border-soft);
+		}
+
+		.card-img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			filter: brightness(95%) contrast(105%);
+			transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+
+		.card-gold-square:hover .card-img {
+			transform: scale(1.04);
+		}
+
+		.card-tag {
+			position: absolute;
+			top: 12px;
+			left: 12px;
+			background: rgba(6, 6, 7, 0.75);
+			backdrop-filter: blur(8px);
+			border: 1px solid var(--gold-border-soft);
+			color: var(--gold-light);
+			font-family: var(--font-mono);
+			font-size: 0.62rem;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			padding: 4px 8px;
+		}
+
+		.card-content {
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		}
+
+		.card-category {
+			font-family: var(--font-mono);
+			font-size: 0.65rem;
+			color: rgba(212, 175, 55, 0.8);
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			margin-bottom: 6px;
+		}
+
+		.card-name {
+			font-family: var(--font-display);
+			font-size: 1.1rem;
+			font-weight: 700;
+			color: #ffffff;
+			letter-spacing: 0.03em;
+			margin-bottom: 8px;
+		}
+
+		.card-desc {
+			font-size: 0.84rem;
+			color: var(--text-muted);
+			line-height: 1.5;
+			margin-bottom: 16px;
+			font-weight: 300;
+			flex-grow: 1;
+		}
+
+		.card-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-top: 1px solid rgba(212, 175, 55, 0.1);
+			padding-top: 12px;
+			font-family: var(--font-mono);
+			font-size: 0.68rem;
+			color: var(--gold-light);
+		}
+
+		.card-link {
+			color: #fff;
+			text-decoration: none;
 			display: inline-flex;
 			align-items: center;
-			padding: 15px 30px;
-			border-radius: 10px;
-			color: #fff !important;
-			font-weight: bold;
-			text-decoration: none;
-			transition: transform 0.3s, box-shadow 0.3s;
-			border: none;
-			font-size: 0.9em;
+			gap: 6px;
+			transition: gap 0.2s ease, color 0.2s ease;
 		}
 
-		.btn-contact i {
-			margin-right: 10px;
-			font-size: 1.2em;
+		.card-gold-square:hover .card-link {
+			color: var(--gold-light);
+			gap: 9px;
 		}
 
-		.btn-contact:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		/* ==========================================================================
+		   BENTO GRID DE DIFERENCIAIS
+		   ========================================================================== */
+		.bento-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 18px;
 		}
 
-		/* Cores específicas */
-		.btn-wa {
-			background-color: #25d366;
+		@media (min-width: 768px) {
+			.bento-grid {
+				grid-template-columns: repeat(3, 1fr);
+			}
+			.bento-wide {
+				grid-column: span 2;
+			}
 		}
 
-		.btn-ig {
-			background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+		.bento-card {
+			background: var(--bg-card);
+			border: 1px solid var(--gold-border-soft);
+			backdrop-filter: blur(10px);
+			padding: 26px;
+			will-change: transform, opacity;
+			transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.12s linear, border-color 0.3s ease, background 0.3s ease;
 		}
 
-		/* Seção de Informações Extras (Substituindo o formulário) */
-		.info-extra {
-			text-align: left;
+		.bento-card:hover {
+			border-color: var(--gold-border-hover);
+			background: var(--bg-card-hover);
+		}
+
+		.bento-num {
+			font-family: var(--font-mono);
+			font-size: 2.2rem;
+			font-weight: 700;
+			color: var(--gold-primary);
+			line-height: 1;
+			margin-bottom: 10px;
+		}
+
+		.bento-title {
+			font-family: var(--font-display);
+			font-size: 1.1rem;
+			color: #fff;
+			margin-bottom: 8px;
+		}
+
+		.bento-text {
+			font-size: 0.85rem;
+			color: var(--text-muted);
+			line-height: 1.6;
+			font-weight: 300;
+		}
+
+		/* ==========================================================================
+		   RODAPÉ MINIMALISTA
+		   ========================================================================== */
+		.footer-section {
+			background: #030304;
+			border-top: 1px solid var(--gold-border-soft);
+			padding: 70px 20px 40px;
+			text-align: center;
+			position: relative;
+			z-index: 20;
+		}
+
+		.footer-box {
+			max-width: 600px;
+			margin: 0 auto;
+			border: 1px solid var(--gold-border-soft);
+			background: var(--bg-card);
+			backdrop-filter: blur(12px);
+			padding: 40px 24px;
+		}
+
+		.footer-copy {
 			margin-top: 40px;
-			padding-top: 30px;
-			border-top: 1px solid rgba(255, 255, 255, 0.1);
-		}
-
-		.info-item {
-			margin-bottom: 20px;
-		}
-
-		.info-item h3 {
-			font-size: 1em;
-			color: #3b82f6 !important;
-			/* Azul que você escolheu */
-			margin-bottom: 5px;
-		}
-
-		.info-item p {
-			font-size: 0.9em;
-			line-height: 1.5;
-			color: #7c7c7c !important;
+			font-family: var(--font-mono);
+			font-size: 0.65rem;
+			letter-spacing: 0.15em;
+			color: var(--text-subtle);
+			text-transform: uppercase;
 		}
 	</style>
 </head>
 
-<body class="is-preload">
+<body>
 
-	<div id="wrapper">
+	<!-- Canvas de Brilhos e Partículas Douradas Flutuantes -->
+	<canvas id="gold-sparkles-canvas"></canvas>
 
-		<nav id="nav">
-			<a href="#" class="icon solid fa-home"><span>Home</span></a>
-			<a href="#work" class="icon solid fa-folder"><span>Portfólio</span></a>
-			<a href="#contact" class="icon solid fa-envelope"><span>Contato</span></a>
-			<a href="https://www.instagram.com/nati.storymaker/"
-				class="icon brands fa-instagram"><span>Instagram</span></a>
-		</nav>
-
-		<div id="main">
-
-			<article id="home" class="panel intro">
-				<header>
-					<h1>Natália Oliveira</h1>
-					<p> StoryMaker • Videomaker</p>
-					<br>
-					<p style="font-size: 0.9em; margin-top: -10px;">
-
-						✨ Transformo eventos em conteúdo único.<br>
-						📍 Fortaleza - CE
-					</p>
-
-				</header>
-				<a href="#work" class="jumplink pic">
-					<span class="arrow icon solid fa-chevron-right"><span>Ver Portfólio</span></span>
-					<img src="images/Natalia.jpeg" alt="Natália Oliveira" />
-				</a>
-			</article>
-
-			<article id="work" class="panel">
-				<header>
-					<h2>Portfólio</h2>
-				</header>
-				<p>
-					<strong>Especialista em Cobertura de Casamentos</strong><br>
-					Eternizando momentos através de um olhar sensível e dinâmico. Especializada em coberturas de
-					casamentos, aniversários e eventos corporativos em Fortaleza.
-				</p>
-				<section>
-					<div class="row">
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic01.jpg" alt="Casamento 01"></a>
-						</div>
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic02.jpg" alt="Casamento 02"></a>
-						</div>
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic03.jpg" alt="Casamento 03"></a>
-						</div>
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic04.jpg" alt="Evento Social"></a>
-						</div>
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic05.jpg" alt="Storymaking"></a>
-						</div>
-						<div class="col-4 col-6-medium col-12-small">
-							<a href="#" class="image fit"><img src="images/pic06.jpg" alt="Teaser Evento"></a>
-						</div>
-					</div>
-				</section>
-			</article>
-
-			<article id="contact" class="panel">
-				<header>
-					<h2>Fale Comigo</h2>
-				</header>
-
-				<p style="text-align: center;">Clique abaixo para conversarmos agora mesmo:</p>
-
-				<div class="contact-buttons">
-					<a href="https://wa.me/5585997827142" target="_blank" class="btn-contact btn-wa">
-						<i class="fab fa-whatsapp"></i> WhatsApp
-					</a>
-
-					<a href="https://www.instagram.com/m/nati.storymaker/" target="_blank" class="btn-contact btn-ig">
-						<i class="fab fa-instagram"></i> Direct Instagram
-					</a>
-				</div>
-
-				<div class="info-extra">
-					<div class="info-item">
-						<h3>📍 Onde atuo?</h3>
-						<p>Atendimento presencial em toda a região de Fortaleza e disponibilidade para viagens sob
-							consulta.</p>
-					</div>
-
-					<div class="info-item">
-						<h3>⏳ Prazo de entrega</h3>
-						<p>O conteúdo para redes sociais (Stories/Reels) é entregue em tempo recorde para que você possa
-							postar ainda no calor do evento.</p>
-					</div>
-
-					<div class="info-item">
-						<h3>💎 Como funciona?</h3>
-						<p>Faço a cobertura completa focada em captar a essência do momento, transformando cada detalhe
-							em um vídeo dinâmico e emocionante.</p>
-					</div>
-				</div>
-			</article>
-
+	<!-- ==========================================================================
+	     NOME FIXO NO FUNDO, NO MEIO DA TELA, MOVIMENTANDO SOMENTE LATERAL
+	     ========================================================================== -->
+	<div class="fixed-bg-marquee" id="fixed-marquee">
+		<div class="marquee-track">
+			<span>NATÁLIA MARIEL • STORYMAKER VIP • CASAMENTOS • 15 ANOS • CELEBRIDADES • REAL-TIME CONTENT • </span>
+			<span>NATÁLIA MARIEL • STORYMAKER VIP • CASAMENTOS • 15 ANOS • CELEBRIDADES • REAL-TIME CONTENT • </span>
 		</div>
-
-		<div id="footer">
-			<ul class="copyright">
-				<li>&copy; Natália Oliveira. Todos os direitos reservados.</li>
-				<li>📍 Fortaleza - CE</li>
-			</ul>
-		</div>
-
 	</div>
 
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
+	<!-- ==========================================================================
+	     1. VÍDEO DE INTRODUÇÃO (LIMPO, SEM BARRAS OU BOTÕES)
+	     ========================================================================== -->
+	<div id="intro-overlay" title="Toque para iniciar">
+		<div class="intro-video-container">
+			<video id="intro-video" autoplay muted playsinline preload="auto">
+				<source src="assets/video/intro.mp4" type="video/mp4" />
+			</video>
+		</div>
+	</div>
+
+	<!-- ==========================================================================
+	     2. DOBRA 1: HERO SCROLL TRACK (FOTO/TEXTO APAGAM ANTES DO CONTEÚDO)
+	     ========================================================================== -->
+	<section class="hero-scroll-track" id="hero-track">
+		<div class="hero-sticky-container" id="hero-sticky">
+
+			<div class="hero-photo-wrapper" id="hero-photo-box">
+				<div class="hero-photo-container">
+					<div class="gold-halo"></div>
+					<img src="images/natalia_cutout.png" alt="Natália Mariel Storymaker" class="natalia-cutout-img" />
+				</div>
+
+				<div class="hero-copy">
+					<h1 class="hero-title">CONTEÚDO EM TEMPO REAL</h1>
+					<p class="hero-subtitle">
+						Viva cada instante do seu grande dia. Eternizamos os melhores momentos para suas redes sociais em até 24 horas.
+					</p>
+					<div class="hero-actions">
+						<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia!%20Gostaria%20de%20consultar%20disponibilidade%20para%20o%20meu%20evento." target="_blank" class="btn-hero-clean">
+							Falar no WhatsApp
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Setinha Minimalista de Scroll -->
+			<a href="#portfolio" class="scroll-arrow" aria-label="Rolar para baixo">
+				<i class="fas fa-chevron-down"></i>
+			</a>
+		</div>
+	</section>
+
+	<!-- ==========================================================================
+	     3. PORTFÓLIO: CARDS COM ENTRADA E SAÍDA CONECTADAS AO SCROLL
+	     ========================================================================== -->
+	<section class="section-container" id="portfolio">
+		<div class="section-header">
+			<span class="section-tag">Portfólio Selecionado</span>
+			<h2 class="section-title">TRABALHOS DE DESTAQUE</h2>
+		</div>
+
+		<!-- Abas Minimalistas de Filtro -->
+		<div class="filter-tabs">
+			<button class="filter-btn active" data-filter="all">TODOS (09)</button>
+			<button class="filter-btn" data-filter="famosos">CELEBRIDADES & VIP (03)</button>
+			<button class="filter-btn" data-filter="casamentos">CASAMENTOS (03)</button>
+			<button class="filter-btn" data-filter="15anos">15 ANOS (03)</button>
+		</div>
+
+		<!-- Grid dos Cards (Com Animação Lateral Bidirecional Conectada à Barra de Rolagem) -->
+		<div class="grid-square-cards">
+
+			<!-- ITEM 1: FAMOSO 1 (Vem da Esquerda) -->
+			<div class="card-gold-square slide-from-left" data-category="famosos">
+				<div class="card-media">
+					<span class="card-tag">VIP GALA</span>
+					<img src="images/portfolio/famoso1.jpg" alt="Red Carpet Premiere" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Celebridades</span>
+					<h3 class="card-name">Red Carpet Premiere</h3>
+					<p class="card-desc">Cobertura de chegadas e bastidores dinâmicos no tapete vermelho em formato Reels.</p>
+					<div class="card-footer">
+						<span>FORMATO: 9:16</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 2: FAMOSO 2 (Vem da Direita) -->
+			<div class="card-gold-square slide-from-right" data-category="famosos">
+				<div class="card-media">
+					<span class="card-tag">SHOW & ARTISTAS</span>
+					<img src="images/portfolio/famoso2.jpg" alt="Backstage Sunset Live" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Celebridades</span>
+					<h3 class="card-name">Backstage Sunset Live</h3>
+					<p class="card-desc">Camarins, energia de palco e cortes rítmicos acelerados para postar durante o show.</p>
+					<div class="card-footer">
+						<span>TEMPO REAL</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 3: FAMOSO 3 (Vem da Esquerda) -->
+			<div class="card-gold-square slide-from-left" data-category="famosos">
+				<div class="card-media">
+					<span class="card-tag">INFLUENCERS</span>
+					<img src="images/portfolio/famoso3.jpg" alt="Lançamento Fashion VIP" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Moda & VIP</span>
+					<h3 class="card-name">Lançamento Fashion VIP</h3>
+					<p class="card-desc">Estética editorial refinada e dinâmica para marcas conceituadas e criadores de conteúdo.</p>
+					<div class="card-footer">
+						<span>4K HDR</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 4: CASAMENTO 1 (Vem da Direita) -->
+			<div class="card-gold-square slide-from-right" data-category="casamentos">
+				<div class="card-media">
+					<span class="card-tag">PÔR DO SOL</span>
+					<img src="images/portfolio/casamento1.jpg" alt="Casamento Beatriz & Matheus" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Casamentos</span>
+					<h3 class="card-name">Beatriz & Matheus</h3>
+					<p class="card-desc">Cerimônia intimista à beira-mar. Stories no decorrer do evento e Reel cinematográfico.</p>
+					<div class="card-footer">
+						<span>IATE CLUBE</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 5: CASAMENTO 2 (Vem da Esquerda) -->
+			<div class="card-gold-square slide-from-left" data-category="casamentos">
+				<div class="card-media">
+					<span class="card-tag">CERIMÔNIA</span>
+					<img src="images/portfolio/casamento2.jpg" alt="Casamento Lara & Guilherme" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Casamentos</span>
+					<h3 class="card-name">Lara & Guilherme</h3>
+					<p class="card-desc">Votos emocionantes e detalhes mais puros captados com discrição e olhar sensível.</p>
+					<div class="card-footer">
+						<span>ENTREGA 24H</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 6: CASAMENTO 3 (Vem da Direita) -->
+			<div class="card-gold-square slide-from-right" data-category="casamentos">
+				<div class="card-media">
+					<span class="card-tag">AFTER PARTY</span>
+					<img src="images/portfolio/casamento3.jpg" alt="The Wedding Party" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">Casamentos</span>
+					<h3 class="card-name">The Wedding Party</h3>
+					<p class="card-desc">A energia da pista de dança fervendo com cortes verticais e áudios em alta.</p>
+					<div class="card-footer">
+						<span>FESTA COMPLETA</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 7: 15 ANOS 1 (Vem da Esquerda) -->
+			<div class="card-gold-square slide-from-left" data-category="15anos">
+				<div class="card-media">
+					<span class="card-tag">DEBUTANTE</span>
+					<img src="images/portfolio/15anos1.jpg" alt="The Golden 15th Sofia" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">15 Anos</span>
+					<h3 class="card-name">The Golden 15th • Sofia</h3>
+					<p class="card-desc">A entrada de princesa e a valsa tradicional filmadas com enquadramentos de cinema.</p>
+					<div class="card-footer">
+						<span>LA MAISON</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 8: 15 ANOS 2 (Vem da Direita) -->
+			<div class="card-gold-square slide-from-right" data-category="15anos">
+				<div class="card-media">
+					<span class="card-tag">PISTA NEON</span>
+					<img src="images/portfolio/15anos2.jpg" alt="Neon Night Alice" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">15 Anos</span>
+					<h3 class="card-name">Neon Night • Alice</h3>
+					<p class="card-desc">Luzes, confetes e a galera na balada. Reels editados com ritmo musical contagiante.</p>
+					<div class="card-footer">
+						<span>BALADA</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<!-- ITEM 9: 15 ANOS 3 (Vem da Esquerda) -->
+			<div class="card-gold-square slide-from-left" data-category="15anos">
+				<div class="card-media">
+					<span class="card-tag">ROYAL GALA</span>
+					<img src="images/portfolio/15anos3.jpg" alt="Royal Debut Valentina" class="card-img" />
+				</div>
+				<div class="card-content">
+					<span class="card-category">15 Anos</span>
+					<h3 class="card-name">Royal Debut • Valentina</h3>
+					<p class="card-desc">Brinde familiar, corte do bolo e momentos espontâneos com alta definição vertical.</p>
+					<div class="card-footer">
+						<span>IPHONE RIG PRO</span>
+						<a href="https://wa.me/5585997827142" target="_blank" class="card-link">SOLICITAR <i class="fas fa-arrow-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<!-- ==========================================================================
+	     4. DIFERENCIAIS EM CARDS TRANSLÚCIDOS
+	     ========================================================================== -->
+	<section class="section-container">
+		<div class="section-header">
+			<span class="section-tag">Diferenciais</span>
+			<h2 class="section-title">O FORMATO STORYMAKER</h2>
+		</div>
+
+		<div class="bento-grid">
+			<div class="bento-card bento-wide slide-from-left">
+				<div class="bento-num">24H</div>
+				<h3 class="bento-title">Entrega no Calor da Festa</h3>
+				<p class="bento-text">
+					Você não espera meses para postar. Recebe os melhores vídeos e arquivos brutos em até 24 horas enquanto as lembranças ainda estão vivas.
+				</p>
+			</div>
+
+			<div class="bento-card slide-from-right">
+				<div class="bento-num">9:16</div>
+				<h3 class="bento-title">100% Vertical</h3>
+				<p class="bento-text">
+					Captação nativa pensada para Stories, Reels e TikTok sem cortes indesejados.
+				</p>
+			</div>
+
+			<div class="bento-card slide-from-left">
+				<div class="bento-num">100%</div>
+				<h3 class="bento-title">Discreta & Invisível</h3>
+				<p class="bento-text">
+					Sem holofotes quentes ou equipamentos volumosos que intimidam os convidados.
+				</p>
+			</div>
+
+			<div class="bento-card bento-wide slide-from-right">
+				<div class="bento-num">VIP</div>
+				<h3 class="bento-title">Seus Convidados Aproveitam</h3>
+				<p class="bento-text">
+					Amigos e família curtem o evento de verdade sem precisar segurar o celular para filmar.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- ==========================================================================
+	     5. RODAPÉ MINIMALISTA
+	     ========================================================================== -->
+	<footer class="footer-section">
+		<div class="footer-box">
+			<span class="section-tag">Disponibilidade</span>
+			<h2 class="section-title" style="margin-bottom: 12px; font-size: 1.5rem;">VAMOS AGENDAR SUA DATA?</h2>
+			<p class="hero-subtitle" style="margin-bottom: 24px;">
+				Atendimento presencial em Fortaleza e disponibilidade para viagens sob consulta.
+			</p>
+			<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia,%20quero%20solicitar%20um%20or%C3%A7amento!" target="_blank" class="btn-hero-clean">
+				Conversar no WhatsApp
+			</a>
+		</div>
+
+		<div class="footer-copy">
+			&copy; Natália Mariel • StoryMaker • Fortaleza - CE
+		</div>
+	</footer>
+
+	<!-- ==========================================================================
+	     6. BARRA INFERIOR MODERNA (SÓ SURGE APÓS A ROLAGEM)
+	     ========================================================================== -->
+	<nav class="bottom-nav-bar" id="bottom-nav-bar" aria-label="Navegação inferior">
+		<div class="bottom-nav-left">
+			<span class="bottom-author-dot"></span>
+			<span class="bottom-author-name">Natalia Mariel</span>
+		</div>
+
+		<div class="bottom-nav-right">
+			<!-- 1. Calendário (Agendamento / Disponibilidade) -->
+			<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia,%20gostaria%20de%20consultar%20a%20agenda%20e%20disponibilidade%20para%20meu%20evento!" target="_blank" class="bottom-icon-link" title="Consultar Calendário / Agenda">
+				<i class="far fa-calendar-alt"></i>
+			</a>
+
+			<!-- 2. Instagram Oficial -->
+			<a href="https://www.instagram.com/nati.storymaker/" target="_blank" class="bottom-icon-link" title="Instagram Oficial @nati.storymaker">
+				<i class="fab fa-instagram"></i>
+			</a>
+
+			<!-- 3. WhatsApp Direto -->
+			<a href="https://wa.me/5585997827142?text=Ol%C3%A1%20Nat%C3%A1lia,%20quero%20conversar%20sobre%20meu%20evento!" target="_blank" class="bottom-icon-link" title="WhatsApp Direto">
+				<i class="fab fa-whatsapp"></i>
+			</a>
+		</div>
+	</nav>
+
+	<!-- ==========================================================================
+	     SCRIPTS: CONTROLE LIMPO, SCROLL FADE PERFEITO & MOTION CONTÍNUO DOS CARDS
+	     ========================================================================== -->
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const introOverlay = document.getElementById('intro-overlay');
+			const introVideo = document.getElementById('intro-video');
+			const heroTrack = document.getElementById('hero-track');
+			const heroPhotoBox = document.getElementById('hero-photo-box');
+			const scrollArrow = document.querySelector('.scroll-arrow');
+			const bottomNavBar = document.getElementById('bottom-nav-bar');
+
+			let introCompleted = false;
+
+			// ======================================================================
+			// 1. FINALIZAÇÃO DA INTRODUÇÃO (AO CLICAR OU AO TERMINAR O VÍDEO)
+			// ======================================================================
+			function finishIntro() {
+				if (introCompleted) return;
+				introCompleted = true;
+
+				introOverlay.classList.add('fade-out');
+
+				setTimeout(() => {
+					heroPhotoBox.classList.add('revealed');
+				}, 150);
+
+				startSubtleAmbientAudio();
+			}
+
+			introVideo.addEventListener('ended', finishIntro);
+			introOverlay.addEventListener('click', finishIntro);
+
+			// ======================================================================
+			// 2. SCROLL DRIVEN: HERO FADE + MOTION CONTÍNUO DOS CARDS COM A ROLAGEM
+			// ======================================================================
+			const animatedCards = document.querySelectorAll('.slide-from-left, .slide-from-right');
+
+			let isTicking = false;
+
+			function handleScrollAnimations() {
+				const vh = window.innerHeight;
+				const scrollY = window.scrollY;
+
+				// --- A. Transição da Foto do Hero & Barra Inferior ---
+				if (heroTrack && heroPhotoBox) {
+					const trackRect = heroTrack.getBoundingClientRect();
+					const scrollableDist = heroTrack.offsetHeight - vh;
+					const currentScrolled = -trackRect.top;
+					const scrollProgress = Math.min(1, Math.max(0, currentScrolled / scrollableDist));
+
+					if (heroPhotoBox.classList.contains('revealed')) {
+						const fadeProgress = Math.min(1, scrollProgress / 0.70);
+						const opacity = Math.max(0, 1 - fadeProgress);
+						const scale = 1 - (fadeProgress * 0.18);
+
+						heroPhotoBox.style.opacity = opacity;
+						heroPhotoBox.style.transform = `scale(${scale})`;
+						heroPhotoBox.style.pointerEvents = opacity <= 0.05 ? 'none' : 'auto';
+
+						if (scrollArrow) {
+							scrollArrow.style.opacity = Math.max(0, 1 - fadeProgress * 3);
+						}
+
+						if (scrollProgress >= 0.55) {
+							bottomNavBar.classList.add('is-visible');
+						} else {
+							bottomNavBar.classList.remove('is-visible');
+						}
+					}
+				}
+
+				// --- B. Motion Contínuo dos Cards (Entram e Saem com a Rolagem) ---
+				const isMobile = window.innerWidth < 768;
+				const maxSlideDistance = isMobile ? 70 : 120; // Distância de deslocamento lateral em pixels
+
+				animatedCards.forEach(card => {
+					if (card.style.display === 'none') return;
+
+					const rect = card.getBoundingClientRect();
+
+					// O card começa a se mover quando seu topo chega a 95% da tela
+					// e fica 100% encaixado no centro quando atinge 65% da tela
+					const triggerPoint = vh * 0.95;
+					const settlePoint = vh * 0.65;
+
+					// Progresso contínuo de 0 (fora da tela) a 1 (centralizado no lugar)
+					let progress = (triggerPoint - rect.top) / (triggerPoint - settlePoint);
+					progress = Math.min(1, Math.max(0, progress));
+
+					const isLeft = card.classList.contains('slide-from-left');
+					const currentOffset = isLeft 
+						? -(1 - progress) * maxSlideDistance 
+						: (1 - progress) * maxSlideDistance;
+
+					// Opacidade também vinculada diretamente à rolagem
+					const opacity = Math.min(1, Math.max(0, progress * 1.25 - 0.1));
+
+					// Aplica a posição calculada diretamente com a barra de rolagem (bidirecional!)
+					card.style.transform = `translateX(${currentOffset}px)`;
+					card.style.opacity = opacity;
+				});
+
+				isTicking = false;
+			}
+
+			window.addEventListener('scroll', () => {
+				if (!isTicking) {
+					requestAnimationFrame(handleScrollAnimations);
+					isTicking = true;
+				}
+			}, { passive: true });
+
+			// Execução inicial
+			handleScrollAnimations();
+
+			// ======================================================================
+			// 3. BRILHOS DOURADOS FLUTUANTES (GOLD SPARKLE PARTICLES CANVAS)
+			// ======================================================================
+			const canvas = document.getElementById('gold-sparkles-canvas');
+			const ctx = canvas.getContext('2d');
+
+			let width, height;
+			function resizeCanvas() {
+				width = canvas.width = window.innerWidth;
+				height = canvas.height = window.innerHeight;
+			}
+			resizeCanvas();
+			window.addEventListener('resize', resizeCanvas);
+
+			const particles = [];
+			const numParticles = window.innerWidth < 768 ? 32 : 55;
+
+			for (let i = 0; i < numParticles; i++) {
+				particles.push({
+					x: Math.random() * width,
+					y: Math.random() * height,
+					size: Math.random() * 2.2 + 0.8,
+					speedY: Math.random() * 0.35 + 0.15,
+					speedX: (Math.random() - 0.5) * 0.25,
+					opacity: Math.random() * 0.6 + 0.2,
+					twinkleSpeed: Math.random() * 0.03 + 0.01,
+					twinkleVal: Math.random() * Math.PI,
+					isStar: Math.random() > 0.85
+				});
+			}
+
+			function drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
+				let rot = Math.PI / 2 * 3;
+				let x = cx;
+				let y = cy;
+				const step = Math.PI / spikes;
+
+				ctx.beginPath();
+				ctx.moveTo(cx, cy - outerRadius);
+				for (let i = 0; i < spikes; i++) {
+					x = cx + Math.cos(rot) * outerRadius;
+					y = cy + Math.sin(rot) * outerRadius;
+					ctx.lineTo(x, y);
+					rot += step;
+
+					x = cx + Math.cos(rot) * innerRadius;
+					y = cy + Math.sin(rot) * innerRadius;
+					ctx.lineTo(x, y);
+					rot += step;
+				}
+				ctx.lineTo(cx, cy - outerRadius);
+				ctx.closePath();
+				ctx.fillStyle = color;
+				ctx.fill();
+			}
+
+			function renderSparkles() {
+				ctx.clearRect(0, 0, width, height);
+
+				particles.forEach(p => {
+					p.y -= p.speedY;
+					p.x += p.speedX;
+					p.twinkleVal += p.twinkleSpeed;
+
+					const currentAlpha = p.opacity * (0.6 + 0.4 * Math.sin(p.twinkleVal));
+
+					if (p.y < -10) {
+						p.y = height + 10;
+						p.x = Math.random() * width;
+					}
+					if (p.x < -10) p.x = width + 10;
+					if (p.x > width + 10) p.x = -10;
+
+					if (p.isStar) {
+						const starColor = `rgba(254, 240, 205, ${currentAlpha})`;
+						drawStar(p.x, p.y, 4, p.size * 2.5, p.size * 0.6, starColor);
+					} else {
+						ctx.beginPath();
+						ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+						ctx.fillStyle = `rgba(212, 175, 55, ${currentAlpha})`;
+						ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
+						ctx.shadowBlur = 6;
+						ctx.fill();
+						ctx.shadowBlur = 0;
+					}
+				});
+
+				requestAnimationFrame(renderSparkles);
+			}
+			requestAnimationFrame(renderSparkles);
+
+			// ======================================================================
+			// 4. SOM AMBIENTE SUTIL DE FUNDO
+			// ======================================================================
+			let audioStarted = false;
+			function startSubtleAmbientAudio() {
+				if (audioStarted) return;
+				audioStarted = true;
+				try {
+					const AudioCtx = window.AudioContext || window.webkitAudioContext;
+					const ctx = new AudioCtx();
+					if (ctx.state === 'suspended') ctx.resume();
+
+					const masterGain = ctx.createGain();
+					masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+					masterGain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 3);
+
+					const filter = ctx.createBiquadFilter();
+					filter.type = 'lowpass';
+					filter.frequency.setValueAtTime(380, ctx.currentTime);
+
+					const notes = [69.30, 103.83, 174.61, 261.63, 311.13];
+					notes.forEach((freq, i) => {
+						const osc = ctx.createOscillator();
+						osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+						osc.frequency.setValueAtTime(freq, ctx.currentTime);
+						const oscGain = ctx.createGain();
+						oscGain.gain.setValueAtTime(0.04 / notes.length, ctx.currentTime);
+						osc.connect(oscGain);
+						oscGain.connect(filter);
+						osc.start();
+					});
+
+					filter.connect(masterGain);
+					masterGain.connect(ctx.destination);
+				} catch (e) {}
+			}
+
+			// ======================================================================
+			// 5. FILTROS DE CATEGORIA
+			// ======================================================================
+			const filterBtns = document.querySelectorAll('.filter-btn');
+			const cards = document.querySelectorAll('.card-gold-square');
+
+			filterBtns.forEach(btn => {
+				btn.addEventListener('click', () => {
+					filterBtns.forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+
+					const filter = btn.getAttribute('data-filter');
+
+					cards.forEach(card => {
+						const category = card.getAttribute('data-category');
+						if (filter === 'all' || category === filter) {
+							card.style.display = 'flex';
+						} else {
+							card.style.display = 'none';
+						}
+					});
+
+					// Recalcula imediatamente a posição com o scroll
+					handleScrollAnimations();
+				});
+			});
+		});
+	</script>
 
 </body>
 
